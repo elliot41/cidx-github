@@ -21,8 +21,7 @@ jobs:
       #- run: sfdx --version
       #- run: sfdx plugins --core
       -  run: which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-      -  run: eval $(ssh-agent -s)
-      -  run: ssh-add
+      -  run: eval $(ssh-agent -s) && ssh-add
       -  run: mkdir -p ~/.ssh
       -  run: chmod 700 ~/.ssh
       -  run: ssh -T git@git.karoo.fr
