@@ -25,7 +25,7 @@ jobs:
       -  run: ssh-keygen -t rsa -C "your_email@example.com" -f /home/runner/.ssh/id_rsa
       -  run: mkdir -p ~/.ssh
       -  run: chmod 700 ~/.ssh
-      -  run: ssh -T git@git.karoo.fr
+      -  run: ssh -T git@git.karoo.fr -p10022
       -  run: git config --global http.sslverify false
       -  run: git config --global user.name "KAROO CI"
       -  run: git config --global user.email "ci@karoo.fr"
