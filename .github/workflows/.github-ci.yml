@@ -8,16 +8,19 @@ jobs:
       - uses: actions/setup-node@v1
       - run: npm install -g bats
       - run: bats -v
+      - run: export SFDX_AUTOUPDATE_DISABLE=false
+      - run: export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
+      - run: export SFDX_DOMAIN_RETRY=300
+      - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_CREATE=true
+      - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_VERSION_CREATE=true
+      - run: mkdir sfdx
+      - run: CLIURL=https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+      - run: wget -qO- $CLIURL | tar xJ -C sfdx --strip-components 1
+      - run: "./sfdx/install"
+      - run: export PATH=./sfdx/$(pwd):$PATH
+      - run: sfdx update
+      - run: sfdx --version
+      - run: sfdx plugins --core
+          
 
-before_install:
-- export SFDX_AUTOUPDATE_DISABLE=false
-- export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
-- export SFDX_DOMAIN_RETRY=300
-- export SFDX_DISABLE_APP_HUB=true
-- export SFDX_LOG_LEVEL=DEBUG
-- mkdir sfdx
-- wget -qO- $URL | tar xJ -C sfdx --strip-components 1
-- "./sfdx/install"
-- export PATH=./sfdx/$(pwd):$PATH
-- sfdx --version
-- sfdx plugins --core
+
