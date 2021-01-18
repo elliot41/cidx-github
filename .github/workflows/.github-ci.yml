@@ -28,7 +28,6 @@ jobs:
       -  run: eval $(ssh-agent -s)
       -  run: ssh-add <(echo "$SSH_PRIVATE_KEY")
       -  run: mkdir -p ~/.ssh
-      -  run: [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
       -  run: chmod 700 ~/.ssh
       -  run: ssh -T git@git.karoo.fr
       -  run: git config --global http.sslverify false
