@@ -1,0 +1,4 @@
+include:
+  - project: "isv-tma/ci-integration-cli"
+    file: "integration.gitlab-ci.yml"
+    ref: "master"
