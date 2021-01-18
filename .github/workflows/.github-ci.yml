@@ -20,6 +20,23 @@ jobs:
       - run: sfdx update
       - run: sfdx --version
       - run: sfdx plugins --core
+      
+      
+      -  run: local FIND="https://git.karoo.fr"
+      -  run: local REPLACE="ssh://git@git.karoo.fr"
+      -  run: which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+      -  run: eval $(ssh-agent -s)
+      -  run: ssh-add <(echo "$SSH_PRIVATE_KEY")
+      -  run: mkdir -p ~/.ssh
+      -  run: [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+      -  run: chmod 700 ~/.ssh
+      -  run: ssh -T git@git.karoo.fr
+      -  run: git config --global http.sslverify false
+      -  run: git config --global user.name "KAROO CI"
+      -  run: git config --global user.email "ci@karoo.fr"
+      -  run: git config --global core.quotepath false
+      -  run: git remote set-url --push origin "${CI_PROJECT_URL/$FIND/$REPLACE}"
+      -  run: git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@git.karoo.fr/".insteadOf https://git.karoo.fr/
           
 
 
