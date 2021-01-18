@@ -21,7 +21,7 @@ jobs:
       #- run: sfdx --version
       #- run: sfdx plugins --core
       -  run: which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-      -  run: eval $(ssh-agent -s) ; ssh-add "$SSH_PRIVATE_KEY"
+      -  run: eval $(ssh-agent -s) ; ssh-add <(echo "$SSH_PRIVATE_KEY")
          env:
            SUPER_SECRET: ${{ secrets.SSH_PRIVATE_KEY }}
       -  run: mkdir -p ~/.ssh
