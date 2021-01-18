@@ -14,8 +14,7 @@ jobs:
       - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_CREATE=true
       - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_VERSION_CREATE=true
       - run: mkdir sfdx
-      - run: CLIURL=https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
-      - run: wget -qO- $CLIURL | tar xJ -C sfdx --strip-components 1
+      - run: wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJ -C sfdx --strip-components 1
       - run: "./sfdx/install"
       - run: export PATH=./sfdx/$(pwd):$PATH
       - run: sfdx update
