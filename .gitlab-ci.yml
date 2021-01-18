@@ -1,5 +1,0 @@
-include:
-  - project: "licences/ci-pipelines"
-    file: "integration.gitlab-ci.yml"
-    ref: "master"
-
