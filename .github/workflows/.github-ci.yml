@@ -4,6 +4,7 @@ jobs:
   install-cli:
     runs-on: ubuntu-latest
     steps:
+      - env: CIURL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
       - run: export SFDX_AUTOUPDATE_DISABLE=false
@@ -12,7 +13,7 @@ jobs:
       - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_CREATE=true
       - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_VERSION_CREATE=true
       - run: mkdir sfdx
-      - run: wget -qO- https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz | tar xJ -C sfdx --strip-components 1
+      - run: wget -qO- $CIURL | tar xJ -C sfdx --strip-components 1
       - run: "./sfdx/install"
       - run: export PATH=./sfdx/$(pwd):$PATH
       - run: sfdx update
