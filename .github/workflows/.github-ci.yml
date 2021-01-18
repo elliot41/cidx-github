@@ -6,36 +6,39 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
-      - run: export SFDX_AUTOUPDATE_DISABLE=false
-      - run: export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
-      - run: export SFDX_DOMAIN_RETRY=300
-      - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_CREATE=true
-      - run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_VERSION_CREATE=true
-      - run: mkdir sfdx
-      - run: wget -qO- $CIURL | tar xJ -C sfdx --strip-components 1
+      #- run: export SFDX_AUTOUPDATE_DISABLE=false
+      #- run: export SFDX_USE_GENERIC_UNIX_KEYCHAIN=true
+      #- run: export SFDX_DOMAIN_RETRY=300
+      #- run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_CREATE=true
+      #- run: export SFDX_PROJECT_AUTOUPDATE_DISABLE_FOR_PACKAGE_VERSION_CREATE=true
+      #- run: mkdir sfdx
+      #- run: wget -qO- $CIURL | tar xJ -C sfdx --strip-components 1
+      #  env : 
+      #    CIURL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
+      #- run: "./sfdx/install"
+      #- run: export PATH=./sfdx/$(pwd):$PATH
+      #- run: sfdx update
+      #- run: sfdx --version
+      #- run: sfdx plugins --core
+      - run : 
+          which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
+          echo "Hi"
+          eval $(ssh-agent -s)
+          ssh-add <(echo "$SSH_PRIVATE_KEY")
+          mkdir -p ~/.ssh
+          [[ -f /.dockerenv ]] && echo -e "Host *\n\tStrictHostKeyChecking no\n\n" > ~/.ssh/config
+          chmod 700 ~/.ssh
+          ssh -T git@git.karoo.fr
+          git config --global http.sslverify false
+          git config --global user.name "KAROO CI"
+          git config --global user.email "ci@karoo.fr"
+          git config --global core.quotepath false
+          git remote set-url --push origin "${CI_PROJECT_URL/$FIND/$REPLACE}"
+          git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@git.karoo.fr/".insteadOf https://git.karoo.fr/
         env : 
-          CIURL: https://developer.salesforce.com/media/salesforce-cli/sfdx-linux-amd64.tar.xz
-      - run: "./sfdx/install"
-      - run: export PATH=./sfdx/$(pwd):$PATH
-      - run: sfdx update
-      - run: sfdx --version
-      - run: sfdx plugins --core
-      
-      
-      -  run: local FIND="https://git.karoo.fr"
-      -  run: local REPLACE="ssh://git@git.karoo.fr"
-      -  run: which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
-      -  run: eval $(ssh-agent -s)
-      -  run: ssh-add <(echo "$SSH_PRIVATE_KEY")
-      -  run: mkdir -p ~/.ssh
-      -  run: chmod 700 ~/.ssh
-      -  run: ssh -T git@git.karoo.fr
-      -  run: git config --global http.sslverify false
-      -  run: git config --global user.name "KAROO CI"
-      -  run: git config --global user.email "ci@karoo.fr"
-      -  run: git config --global core.quotepath false
-      -  run: git remote set-url --push origin "${CI_PROJECT_URL/$FIND/$REPLACE}"
-      -  run: git config --global url."https://gitlab-ci-token:${CI_JOB_TOKEN}@git.karoo.fr/".insteadOf https://git.karoo.fr/
+          FIND: "https://git.karoo.fr"
+          REPLACE: "ssh://git@git.karoo.fr"
+
           
 
 
