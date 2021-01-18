@@ -22,7 +22,7 @@ jobs:
       #- run: sfdx plugins --core
       -  run: which ssh-agent || ( apt-get update -y && apt-get install openssh-client -y )
       -  run: eval $(ssh-agent -s)
-      -  run: ssh-keygen -t rsa -C "your_email@example.com"
+      -  run: ssh-keygen -t rsa -C "your_email@example.com" -f /home/runner/.ssh/id_rsa
       -  run: mkdir -p ~/.ssh
       -  run: chmod 700 ~/.ssh
       -  run: ssh -T git@git.karoo.fr
