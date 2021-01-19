@@ -33,7 +33,7 @@ jobs:
          env : 
           FIND: "https://git.karoo.fr"
           REPLACE: "ssh://git@git.karoo.fr"
-      -  run: git config --global url."https://ynRY8_CePXmodNXgcyHH@git.karoo.fr/".insteadOf https://git.karoo.fr/
+      -  run: git config --global url."https://gitlab-ci-token:ynRY8_CePXmodNXgcyHH@git.karoo.fr/".insteadOf https://git.karoo.fr/
       -  run: npm config set user 0
       -  run: npm config set unsafe-perm true
       -  run: npm cache verify
