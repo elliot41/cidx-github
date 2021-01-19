@@ -39,6 +39,13 @@ jobs:
       -  run: npm cache verify
       -  run: npm install "git+https://project_649_bot:ynRY8_CePXmodNXgcyHH@git.karoo.fr/licences/cidx#master" --global --loglevel=error
       -  run : cidx --help
+      -  run: cidx check:gitignore
+      -  run: cidx org:auth --alias=org --url=force://PlatformCLI::5Aep8617DnARqEq5Py_NUBydI.xvweduvdjpQZzvZQQVb4EI8Gwq5D3bvJPt1Dh8IANP3EDfWlx6Q==@afdas--cidx.my.salesforce.com
+      -  run: cidx org:dump -@ --alias=org --apiVersion=48.0
+      -  run: git add -A
+      -  run: git commit -m "$GITHUB_SHA" --allow-empty
+      -  run: git push origin 
+      -  run: cidx commit:deploy --alias=org --notest
       #-  run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
       #-  run : git remote -v
 
