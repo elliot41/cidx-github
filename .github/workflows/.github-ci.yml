@@ -48,6 +48,7 @@ jobs:
     needs: [install-cli]
     steps:
       - run: echo "This job will run after install_cli".
+      - run : cidx --help
               
 
           
