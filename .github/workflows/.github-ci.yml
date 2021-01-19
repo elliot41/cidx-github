@@ -40,6 +40,14 @@ jobs:
       -  run: npm install "git+https://project_649_bot:ynRY8_CePXmodNXgcyHH@git.karoo.fr/licences/cidx#master" --global --loglevel=error
       #-  run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
       #-  run : git remote -v
+
+    org_dump:
+    runs-on: ubuntu-latest
+    needs: [install-cli]
+    on: 
+      workflow_dispatch
+    steps:
+      - run: echo "This job will run after install_cli".
               
 
           
