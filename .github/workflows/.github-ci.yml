@@ -38,6 +38,7 @@ jobs:
       -  run: npm config set unsafe-perm true
       -  run: npm cache verify
       -  run: npm install "git+https://project_649_bot:ynRY8_CePXmodNXgcyHH@git.karoo.fr/licences/cidx#master" --global --loglevel=error
+      -  run : cidx --help
       #-  run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
       #-  run : git remote -v
 
@@ -48,7 +49,7 @@ jobs:
     needs: [install-cli]
     steps:
       - run: echo "This job will run after install_cli".
-      - run : cidx --help
+      #- run : cidx --help
               
 
           
