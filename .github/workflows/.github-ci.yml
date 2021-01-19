@@ -33,11 +33,11 @@ jobs:
          env : 
           FIND: "https://git.karoo.fr"
           REPLACE: "ssh://git@git.karoo.fr"
-      -  run: git config --global url."https://gitlab-ci-token:ynRY8_CePXmodNXgcyHH@git.karoo.fr/".insteadOf https://git.karoo.fr/
+      -  run: git config --global url."https://project_649_bot:ynRY8_CePXmodNXgcyHH@git.karoo.fr/".insteadOf https://git.karoo.fr/
       -  run: npm config set user 0
       -  run: npm config set unsafe-perm true
       -  run: npm cache verify
-      -  run: npm install "git+https://gitlab-ci-token:ynRY8_CePXmodNXgcyHH@git.karoo.fr/isv-tma/ci_cli#master" --global --loglevel=error
+      -  run: npm install "git+https://project_649_bot:ynRY8_CePXmodNXgcyHH@git.karoo.fr/licences/cidx#master" --global --loglevel=error
       #-  run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
       #-  run : git remote -v
               
