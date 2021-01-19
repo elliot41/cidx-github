@@ -41,12 +41,12 @@ jobs:
       #-  run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
       #-  run : git remote -v
 
-name: org_dump
-on: workflow_dispatch
-jobs:
-  test:
-    steps:
-      - run: echo "This job will run after install_cli".
+
+  on: workflow_dispatch
+  jobs:
+    test:
+      steps:
+        - run: echo "This job will run after install_cli".
               
 
           
