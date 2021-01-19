@@ -1,8 +1,8 @@
 name: learn-github-actions
-on: [push]
 jobs:
   install-cli:
     runs-on: ubuntu-latest
+    on: [push]
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v1
@@ -41,12 +41,12 @@ jobs:
       #-  run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
       #-  run : git remote -v
 
-
-  on: workflow_dispatch
-  jobs:
-    test:
+  deploy_ab:
+      runs-on: ubuntu-latest
+      needs: [install-cli]
       steps:
-        - run: echo "This job will run after install_cli".
+        - run: echo "This job will run a
+      on: workflow_dispatch
               
 
           
