@@ -38,7 +38,8 @@ jobs:
       -  run: npm config set unsafe-perm true
       -  run: npm cache verify
       -  run: npm install "git+https://ynRY8_CePXmodNXgcyHH@git.karoo.fr/isv-tma/ci_cli#master" --global --loglevel=error
-      #- run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
+      -  run : git clone https://elliot:vkL1ERFvotU_SEzQ8Ys_@git.karoo.fr/projet-afdas/projet-afdas-sfdx
+      -  run : git remote -v
               
 
           
