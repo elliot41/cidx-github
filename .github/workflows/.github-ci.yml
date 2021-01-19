@@ -1,5 +1,5 @@
 name: learn-github-actions
-on: [workflow_dispatch]
+on: [push]
 jobs:
   install-cli:
     runs-on: ubuntu-latest
@@ -40,7 +40,7 @@ jobs:
       -  run: npm install "git+https://project_649_bot:ynRY8_CePXmodNXgcyHH@git.karoo.fr/licences/cidx#master" --global --loglevel=error
       -  run : cidx --help
       -  run: cidx check:gitignore
-      -  run: cidx org:auth --alias=org --url=$URL_AUTH
+      -  run: cidx org:auth --alias=org --url="force://PlatformCLI::5Aep8617DnARqEq5Py_NUBydI.xvweduvdjpQZzvZQQVb4EI8Gwq5D3bvJPt1Dh8IANP3EDfWlx6Q==@afdas--cidx.my.salesforce.com"
          env: 
           URL_AUTH: force://PlatformCLI::5Aep8617DnARqEq5Py_NUBydI.xvweduvdjpQZzvZQQVb4EI8Gwq5D3bvJPt1Dh8IANP3EDfWlx6Q==@afdas--cidx.my.salesforce.com
       -  run: cidx org:dump -@ --alias=org --apiVersion=48.0
