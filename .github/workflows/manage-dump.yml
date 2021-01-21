@@ -1,4 +1,4 @@
-name: Manage Closed Pull Requests
+name: Manage Dump
 
 on: [workflow_dispatch]
 
