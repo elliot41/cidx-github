@@ -15,8 +15,8 @@ jobs:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
       CI_ENABLE: ${{ secrets.CI_ENABLE }}
-      DISABLE_LINT: ${{ DISABLE_LINT }}
-      DISABLE_TEST: ${{ DISABLE_TEST }}
+      DISABLE_LINT: ${{ secrets.DISABLE_LINT }}
+      DISABLE_TEST: ${{ secrets.DISABLE_TEST }}
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
