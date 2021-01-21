@@ -8,11 +8,11 @@ jobs:
     # - the PR has been merged in the 'develop' branch,
     # - CI_ENABLE = true,
     # - DISABLE_SIT = false
-    if: |
-      github.event.pull_request.merged == true &&
-      contains( github.ref, 'develop') &&
-      secrets.CI_ENABLE == 1 &&
-      secrets.DISABLE_SIT != 1
+    #if: |
+    #  github.event.pull_request.merged == true &&
+     # contains( github.ref, 'develop') &&
+     # secrets.CI_ENABLE == 1 &&
+     # secrets.DISABLE_SIT != 1
     env:
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
       AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
