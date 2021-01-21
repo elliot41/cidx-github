@@ -8,9 +8,9 @@ jobs:
   test-lint:
     name: test-lint
     if: |
-      secrets.CI_ENABLE == 1 &&
-      secrets.DISABLE_LINT != 1 &&
-      secrets.DISABLE_TEST != 1
+      ${{ secrets.CI_ENABLE }} == 1 &&
+      ${{ secrets.DISABLE_LINT }} != 1 &&
+      ${{ secrets.DISABLE_TEST }} != 1
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
@@ -27,7 +27,7 @@ jobs:
             cidx source:lint
 
   test-scan-apex:
-    name: test-lint
+    name: test-scan-apex
     if: |
       secrets.CI_ENABLE == 1 &&
       secrets.DISABLE_SCAN_TEST != 1 &&
