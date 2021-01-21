@@ -9,15 +9,15 @@ jobs:
     name: set-ci-values
     runs-on: ubuntu-latest
     outputs:
-      is_test_lint_set: ${{ steps.exec_lint_job.outputs.is_test_lint_set }}
-      is_test_scan_apex_set: ${{ steps.exec_scan_job.outputs.is_test_scan_apex_set }}
-      is_disable_SIT_set: ${{ steps.exec_scan_job.outputs.is_disable_SIT_set }}
-      is_disable_UAT_set: ${{ steps.exec_scan_job.outputs.is_disable_UAT_set }}
-      is_disable_PPR_set: ${{ steps.exec_scan_job.outputs.is_disable_PPR_set }}
-      is_disable_PROD_set: ${{ steps.exec_scan_job.outputs.is_disable_PROD_set }}
+      is_test_lint_set: ${{ steps.exec_check_job.outputs.is_test_lint_set }}
+      is_test_scan_apex_set: ${{ steps.exec_check_job.outputs.is_test_scan_apex_set }}
+      is_disable_SIT_set: ${{ steps.exec_check_job.outputs.is_disable_SIT_set }}
+      is_disable_UAT_set: ${{ steps.exec_check_job.outputs.is_disable_UAT_set }}
+      is_disable_PPR_set: ${{ steps.exec_check_job.outputs.is_disable_PPR_set }}
+      is_disable_PROD_set: ${{ steps.exec_check_job.outputs.is_disable_PROD_set }}
     steps:
-      - name: Check whether lint tests should be done
-        id: exec_lint_job
+      - name: Check which actions should be executed
+        id: exec_check_job
         env:
           CI_ENABLE: ${{ secrets.CI_ENABLE }}
           DISABLE_LINT: ${{ secrets.DISABLE_LINT }}
@@ -38,7 +38,7 @@ jobs:
   test-lint:
     name: test-lint
     needs: [set-ci-values]
-    if: needs.set-ci-values.outputs.is_test_lint_set
+    if: needs.set-ci-values.outputs.is_test_lint_set == true
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
@@ -57,7 +57,7 @@ jobs:
   test-scan-apex:
     name: test-scan-apex
     needs: [ set-ci-values ]
-    if: needs.set-ci-values.outputs.is_test_scan_apex_set
+    if: needs.set-ci-values.outputs.is_test_scan_apex_set == true
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
