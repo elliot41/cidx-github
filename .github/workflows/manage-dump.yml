@@ -6,8 +6,9 @@ jobs:
   org_dump:
     env:
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
-      AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
+      #AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
       CI_UNITTEST_DISABLE: true
+      AUTH_SIT_URL: force://PlatformCLI::5Aep8617DnARqEq5Py_NUBydI.xvweduvdjpQZzvZQQVb4EI8Gwq5D3bvJPt1Dh8IANP3EDfWlx6Q==@afdas--cidx.my.salesforce.com
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -18,5 +19,5 @@ jobs:
         run: ./scripts/github/before_script.sh
       - name: Deploy to SIT
         run: |
-          echo "sit token : " ${{env.AUTH_SIT_URL}}
-          cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
+          echo "sit token : " $AUTH_SIT_URL
+          cidx org:auth --alias=sit --url=$AUTH_SIT_URL
