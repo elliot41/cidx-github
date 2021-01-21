@@ -1,5 +1,7 @@
 name: learn-github-actions
 on: [push]
+    branches:
+      - nopush
 jobs:
   install-cli:
     runs-on: ubuntu-latest
