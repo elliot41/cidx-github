@@ -1,0 +1,27 @@
+name: Test ORC
+
+on:
+  push:
+    branches:
+      - toto
+  pull_request:
+    branches:
+      - toto
+
+jobs:
+  test-oro:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: local action path
+        run: echo ${{ github.action_path }}
+      - name: where am I ?
+        run: pwd
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+          CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
