@@ -18,4 +18,5 @@ jobs:
         run: ./scripts/github/before_script.sh
       - name: Deploy to SIT
         run: |
+          echo "sit token : " ${{env.AUTH_SIT_URL}}
           cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
