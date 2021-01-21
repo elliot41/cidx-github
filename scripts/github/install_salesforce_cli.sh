@@ -1,3 +1,4 @@
+#!/bin/bash
 # Salesforce CLI Environment Variables
 # https://developer.salesforce.com/docs/atlas.en-us.sfdx_dev.meta/sfdx_dev/sfdx_dev_cli_env_variables.htm
 

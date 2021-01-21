@@ -1,0 +1,86 @@
+name: Manage Pull Requests
+
+on:
+  pull_request:
+    types: [ opened, synchronize, reopened ]
+
+jobs:
+  test-lint:
+    name: test-lint
+    if: |
+      secrets.CI_ENABLE == 1 &&
+      secrets.DISABLE_LINT != 1 &&
+      secrets.DISABLE_TEST != 1
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+        - uses: actions/checkout@v2
+        - uses: actions/setup-node@v2
+          with:
+            node-version: '12'
+        - name: Setup
+          run: ./scripts/github/before_script.sh
+        - name: Lint
+          run: |
+            cidx source:lint
+
+  test-scan-apex:
+    name: test-lint
+    if: |
+      secrets.CI_ENABLE == 1 &&
+      secrets.DISABLE_SCAN_TEST != 1 &&
+      secrets.DISABLE_TEST != 1
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-scan-apex
+          path: Artifact/*
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+      - name: Lint
+        run: |
+          npm install pmd-bin --global --loglevel=error
+          cidx source:scan -@
+
+  check_SIT:
+    name: check_SIT
+    # this job will only run if:
+    # - the PR has been created, synchronized or reopened in the 'develop' branch,
+    # - CI_ENABLE = true,
+    # - DISABLE_SIT = false
+    if: |
+      contains( github.ref, 'develop') &&
+      secrets.CI_ENABLE == 1 &&
+      secrets.DISABLE_SIT != 1
+    needs: [test-lint, test-scan-apex]
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+      AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
+      CI_UNITTEST_DISABLE: false
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - uses: actions/upload-artifact@v2
+        with:
+          name: check_SIT
+          path: Artifact/*
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+      - name: Deploy to SIT
+        run: |
+          cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
+          cidx org:deploy --alias=sit --incremental --cleanSequence=deploy.cleanSequence.json --artifact --notest=${{env.CI_UNITTEST_DISABLE}} --checkOnly=true

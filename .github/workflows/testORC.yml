@@ -3,10 +3,10 @@ name: Test ORC
 on:
   push:
     branches:
-      - TestORC
+      - toto
   pull_request:
     branches:
-      - TestORC
+      - toto
 
 jobs:
   test-oro:
@@ -16,6 +16,8 @@ jobs:
       - uses: actions/setup-node@v2
         with:
           node-version: '12'
+      - name: local action path
+        run: echo ${{ github.action_path }}
       - name: where am I ?
         run: pwd
       - name: Setup

@@ -2,10 +2,10 @@ name: learn-github-actions
 on:
   push:
     branches:
-      - master
+      - notmaster
   pull_request:
     branches:
-      - master
+      - notmaster
 
 jobs:
   install-cli:
