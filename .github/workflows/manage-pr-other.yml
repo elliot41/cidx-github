@@ -11,6 +11,10 @@ jobs:
     outputs:
       is_test_lint_set: ${{ steps.exec_lint_job.outputs.is_test_lint_set }}
       is_test_scan_apex_set: ${{ steps.exec_scan_job.outputs.is_test_scan_apex_set }}
+      is_disable_SIT_set: ${{ steps.exec_scan_job.outputs.is_disable_SIT_set }}
+      is_disable_UAT_set: ${{ steps.exec_scan_job.outputs.is_disable_UAT_set }}
+      is_disable_PPR_set: ${{ steps.exec_scan_job.outputs.is_disable_PPR_set }}
+      is_disable_PROD_set: ${{ steps.exec_scan_job.outputs.is_disable_PROD_set }}
     steps:
       - name: Check whether lint tests should be done
         id: exec_lint_job
@@ -19,9 +23,17 @@ jobs:
           DISABLE_LINT: ${{ secrets.DISABLE_LINT }}
           DISABLE_TEST: ${{ secrets.DISABLE_TEST }}
           DISABLE_SCAN_TEST: ${{ secrets.DISABLE_SCAN_TEST }}
+          DISABLE_SIT: ${{ secrets.DISABLE_SIT }}
+          DISABLE_UAT: ${{ secrets.DISABLE_UAT }}
+          DISABLE_PPR: ${{ secrets.DISABLE_PPR }}
+          DISABLE_PROD: ${{ secrets.DISABLE_PROD }}
         run: |
           echo '::set-output name=is_test_lint_set::${{ env.CI_ENABLE == 1 && env.DISABLE_LINT != 1 && env.DISABLE_TEST != 1 }}'
           echo '::set-output name=is_test_scan_apex_set::${{ env.CI_ENABLE == 1 && env.DISABLE_SCAN_TEST != 1 && env.DISABLE_TEST != 1 }}'
+          echo '::set-output name=is_disable_SIT_set::${{ env.CI_ENABLE == 1 && env.DISABLE_SIT == 1 }}'
+          echo '::set-output name=is_disable_UAT_set::${{ env.CI_ENABLE == 1 && env.DISABLE_UAT == 1 }}'
+          echo '::set-output name=is_disable_PPR_set::${{ env.CI_ENABLE == 1 && env.DISABLE_PPR == 1 }}'
+          echo '::set-output name=is_disable_PROD_set::${{ env.CI_ENABLE == 1 && env.DISABLE_PROD == 1 }}'
 
   test-lint:
     name: test-lint
@@ -74,16 +86,13 @@ jobs:
     # - DISABLE_SIT = false
     if: |
       contains( github.ref, 'develop') &&
-      env.CI_ENABLE == 1 &&
-      env.DISABLE_SIT != 1
-    needs: [test-lint, test-scan-apex]
+      needs.set-ci-values.outputs.is_disable_SIT_set == false
+    needs: [test-lint, test-scan-apex, set-ci-values]
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
       AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
       CI_UNITTEST_DISABLE: false
-      CI_ENABLE: ${{ secrets.CI_ENABLE }}
-      DISABLE_SIT: ${{ secrets.DISABLE_SIT }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
