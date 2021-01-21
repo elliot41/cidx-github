@@ -1,7 +1,10 @@
 name: learn-github-actions
-on: [push]
+on:
+  # Trigger the workflow on push or pull request,
+  # but only for the main branch
+  push:
     branches:
-      - nopush
+      - notmaster
 jobs:
   install-cli:
     runs-on: ubuntu-latest
