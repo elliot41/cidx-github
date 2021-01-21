@@ -38,7 +38,7 @@ jobs:
   test-lint:
     name: test-lint
     needs: [set-ci-values]
-    if: needs.set-ci-values.outputs.is_test_lint_set == true
+    if: needs.set-ci-values.outputs.is_test_lint_set == 'true'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
@@ -57,7 +57,7 @@ jobs:
   test-scan-apex:
     name: test-scan-apex
     needs: [ set-ci-values ]
-    if: needs.set-ci-values.outputs.is_test_scan_apex_set == true
+    if: needs.set-ci-values.outputs.is_test_scan_apex_set == 'true'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
@@ -86,7 +86,7 @@ jobs:
     # - DISABLE_SIT = false
     if: |
       contains( github.ref, 'develop') &&
-      needs.set-ci-values.outputs.is_disable_SIT_set == false
+      needs.set-ci-values.outputs.is_disable_SIT_set == 'false'
     needs: [test-lint, test-scan-apex, set-ci-values]
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
