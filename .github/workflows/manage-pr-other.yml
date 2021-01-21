@@ -8,12 +8,15 @@ jobs:
   test-lint:
     name: test-lint
     if: |
-      ${{ secrets.CI_ENABLE }} == 1 &&
-      ${{ secrets.DISABLE_LINT }} != 1 &&
-      ${{ secrets.DISABLE_TEST }} != 1
+      env.CI_ENABLE == 1 &&
+      env.DISABLE_LINT != 1 &&
+      env.DISABLE_TEST != 1
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+      CI_ENABLE: ${{ secrets.CI_ENABLE }}
+      DISABLE_LINT: ${{ DISABLE_LINT }}
+      DISABLE_TEST: ${{ DISABLE_TEST }}
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
@@ -29,12 +32,15 @@ jobs:
   test-scan-apex:
     name: test-scan-apex
     if: |
-      secrets.CI_ENABLE == 1 &&
-      secrets.DISABLE_SCAN_TEST != 1 &&
-      secrets.DISABLE_TEST != 1
+      env.CI_ENABLE == 1 &&
+      env.DISABLE_SCAN_TEST != 1 &&
+      env.DISABLE_TEST != 1
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+      CI_ENABLE: ${{ secrets.CI_ENABLE }}
+      DISABLE_SCAN_TEST: ${{ secrets.DISABLE_SCAN_TEST }}
+      DISABLE_TEST: ${{ secrets.DISABLE_TEST }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
@@ -60,14 +66,16 @@ jobs:
     # - DISABLE_SIT = false
     if: |
       contains( github.ref, 'develop') &&
-      secrets.CI_ENABLE == 1 &&
-      secrets.DISABLE_SIT != 1
+      env.CI_ENABLE == 1 &&
+      env.DISABLE_SIT != 1
     needs: [test-lint, test-scan-apex]
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
       AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
       CI_UNITTEST_DISABLE: false
+      CI_ENABLE: ${{ secrets.CI_ENABLE }}
+      DISABLE_SIT: ${{ secrets.DISABLE_SIT }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
