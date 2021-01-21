@@ -5,18 +5,31 @@ on:
     types: [ opened, synchronize, reopened ]
 
 jobs:
+  set-ci-values:
+    name: set-ci-values
+    runs-on: ubuntu-latest
+    outputs:
+      is_test_lint_set: ${{ steps.exec_lint_job.outputs.is_test_lint_set }}
+      is_test_scan_apex_set: ${{ steps.exec_scan_job.outputs.is_test_scan_apex_set }}
+    steps:
+      - name: Check whether lint tests should be done
+        id: exec_lint_job
+        env:
+          CI_ENABLE: ${{ secrets.CI_ENABLE }}
+          DISABLE_LINT: ${{ secrets.DISABLE_LINT }}
+          DISABLE_TEST: ${{ secrets.DISABLE_TEST }}
+          DISABLE_SCAN_TEST: ${{ secrets.DISABLE_SCAN_TEST }}
+        run: |
+          echo '::set-output name=is_test_lint_set::${{ env.CI_ENABLE == 1 && env.DISABLE_LINT != 1 && env.DISABLE_TEST != 1 }}'
+          echo '::set-output name=is_test_scan_apex_set::${{ env.CI_ENABLE == 1 && env.DISABLE_SCAN_TEST != 1 && env.DISABLE_TEST != 1 }}'
+
   test-lint:
     name: test-lint
-    if: |
-      env.CI_ENABLE == 1 &&
-      env.DISABLE_LINT != 1 &&
-      env.DISABLE_TEST != 1
+    needs: [set-ci-values]
+    if: needs.set-ci-values.outputs.is_test_lint_set
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
-      CI_ENABLE: ${{ secrets.CI_ENABLE }}
-      DISABLE_LINT: ${{ secrets.DISABLE_LINT }}
-      DISABLE_TEST: ${{ secrets.DISABLE_TEST }}
     runs-on: ubuntu-latest
     steps:
         - uses: actions/checkout@v2
@@ -31,16 +44,11 @@ jobs:
 
   test-scan-apex:
     name: test-scan-apex
-    if: |
-      env.CI_ENABLE == 1 &&
-      env.DISABLE_SCAN_TEST != 1 &&
-      env.DISABLE_TEST != 1
+    needs: [ set-ci-values ]
+    if: needs.set-ci-values.outputs.is_test_scan_apex_set
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
-      CI_ENABLE: ${{ secrets.CI_ENABLE }}
-      DISABLE_SCAN_TEST: ${{ secrets.DISABLE_SCAN_TEST }}
-      DISABLE_TEST: ${{ secrets.DISABLE_TEST }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
