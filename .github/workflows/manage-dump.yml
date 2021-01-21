@@ -1,18 +1,9 @@
 name: Manage Dump
 
-on: [workflow_dispatch]
+on: [push]
 
 jobs:
-  deploy_SIT:
-    # this job will only run if:
-    # - the PR has been merged in the 'develop' branch,
-    # - CI_ENABLE = true,
-    # - DISABLE_SIT = false
-    #if: |
-    #  github.event.pull_request.merged == true &&
-     # contains( github.ref, 'develop') &&
-     # secrets.CI_ENABLE == 1 &&
-     # secrets.DISABLE_SIT != 1
+  org_dump:
     env:
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
       AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
@@ -28,4 +19,3 @@ jobs:
       - name: Deploy to SIT
         run: |
           cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
-          #cidx org:deploy --alias=sit --incremental --cleanSequence=deploy.cleanSequence.json --artifact --notest=${{env.CI_UNITTEST_DISABLE}}
