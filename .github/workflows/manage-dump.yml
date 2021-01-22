@@ -1,6 +1,6 @@
 name: Manage Dump
 
-on: [push]
+on: [workflow_dispatch]
 
 jobs:
   org_dump:
