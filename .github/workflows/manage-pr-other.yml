@@ -76,6 +76,8 @@ jobs:
       - name: Lint
         run: |
           echo `ref: ${{ github.ref }}`
+          echo GITHUB_BASE_REF $GITHUB_BASE_REF
+          echo GITHUB_HEAD_REF $GITHUB_HEAD_REF
           npm install pmd-bin --global --loglevel=error
           cidx source:scan -@
 
