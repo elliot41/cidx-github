@@ -75,6 +75,7 @@ jobs:
         run: ./scripts/github/before_script.sh
       - name: Lint
         run: |
+          echo base.ref ${{ github.event.pull_request.base.ref }}
           echo `ref: ${{ github.ref }}`
           echo GITHUB_BASE_REF $GITHUB_BASE_REF
           echo GITHUB_HEAD_REF $GITHUB_HEAD_REF
