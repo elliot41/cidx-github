@@ -75,6 +75,7 @@ jobs:
         run: ./scripts/github/before_script.sh
       - name: Lint
         run: |
+          echo `ref: ${{ github.ref }}`
           npm install pmd-bin --global --loglevel=error
           cidx source:scan -@
 
