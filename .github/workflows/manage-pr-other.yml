@@ -111,7 +111,7 @@ jobs:
         run: ./scripts/github/before_script.sh
       - name: Deploy to SIT
         run: |
-          cat ${{env.AUTH_SIT_URL}} > ./authTmp.url
+          echo ${{env.AUTH_SIT_URL}} > ./authTmp.url
           cat ./authTmp.url
           cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
           cidx org:deploy --alias=sit --incremental --cleanSequence=deploy.cleanSequence.json --artifact --notest=${{env.CI_UNITTEST_DISABLE}} --checkOnly=true
