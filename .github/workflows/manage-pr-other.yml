@@ -73,7 +73,7 @@ jobs:
           path: Artifact/*
       - name: Setup
         run: ./scripts/github/before_script.sh
-      - name: Lint
+      - name: Run Source Checks
         run: |
           echo base.ref ${{ github.event.pull_request.base.ref }}
           echo `ref: ${{ github.ref }}`
@@ -89,7 +89,7 @@ jobs:
     # - CI_ENABLE = true,
     # - DISABLE_SIT = false
     if: |
-      contains( github.ref, 'develop') &&
+      github.base_ref == 'develop'  &&
       needs.set-ci-values.outputs.is_disable_SIT_set == 'false'
     needs: [test-lint, test-scan-apex, set-ci-values]
     env:
