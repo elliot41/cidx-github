@@ -2,16 +2,11 @@ name: TestDumpCIDX
 
 on: [push]
 jobs:
-  deploy_SIT:
+  OrgDumpJob:
     # this job will only run if:
     # - the PR has been merged in the 'develop' branch,
     # - CI_ENABLE = true,
     # - DISABLE_SIT = false
-    if: |
-      github.event.pull_request.merged == true &&
-      contains( github.ref, 'develop') &&
-      secrets.CI_ENABLE == 1 &&
-      secrets.DISABLE_SIT != 1
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
