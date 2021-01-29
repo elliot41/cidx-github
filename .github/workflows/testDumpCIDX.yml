@@ -1,0 +1,31 @@
+name: TestDumpCIDX
+
+on: [push]
+jobs:
+  deploy_SIT:
+    # this job will only run if:
+    # - the PR has been merged in the 'develop' branch,
+    # - CI_ENABLE = true,
+    # - DISABLE_SIT = false
+    if: |
+      github.event.pull_request.merged == true &&
+      contains( github.ref, 'develop') &&
+      secrets.CI_ENABLE == 1 &&
+      secrets.DISABLE_SIT != 1
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+      AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
+      CI_UNITTEST_DISABLE: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+      - name: Org Dump
+        run: |
+          cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
+          cidx org:dump -@ --alias=org
