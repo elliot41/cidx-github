@@ -22,5 +22,5 @@ jobs:
         run: ./scripts/github/before_script.sh
       - name: Org Dump
         run: |
-          cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
+          cidx org:auth --alias=org --url=${{env.AUTH_SIT_URL}}
           cidx org:dump -@ --alias=org
