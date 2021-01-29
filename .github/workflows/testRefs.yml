@@ -1,6 +1,6 @@
 name: TestRefs
 
-on: [workflow_dispatch]
+on: [push]
 jobs:
   testRefJob:
     # this job will only run if:
