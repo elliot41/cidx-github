@@ -1,6 +1,6 @@
 name: TestDumpCIDX
 
-on: [push]
+on: [workflow_dispatch]
 jobs:
   OrgDumpJob:
     # this job will only run if:
@@ -19,8 +19,10 @@ jobs:
         with:
           node-version: '12'
       - name: Setup
-        run: ./scripts/github/before_script.sh
+        run: |
+           chmod +x ./scripts/github/before_script.sh && chmod +x ./scripts/github/init_git.sh && chmod +x ./scripts/github/install_salesforce_cli.sh && ./scripts/github/before_script.sh
       - name: Org Dump
         run: |
           cidx org:auth --alias=org --url=${{env.AUTH_SIT_URL}}
           cidx org:dump -@ --alias=org
+          CI_SYNC_NAME_full=${CI_SYNC_NAME:-$CI_COMMIT_REF_NAME}

@@ -1,0 +1,38 @@
+name: TestRefs
+
+on: [workflow_dispatch]
+jobs:
+  testRefJob:
+    # this job will only run if:
+    # - the PR has been merged in the 'develop' branch,
+    # - CI_ENABLE = true,
+    # - DISABLE_SIT = false
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_UNITTEST_DISABLE: true
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: '12'
+      #- name: Setup
+      #  run: |
+      #     chmod +x ./scripts/github/init_git.sh && ./scripts/github/init_git.sh
+      - name: Setup
+        run: |
+           chmod +x ./scripts/github/before_script.sh && chmod +x ./scripts/github/init_git.sh && ./scripts/github/before_script.sh
+
+
+      - name: TestRef
+        run: |
+          echo CURRENT_DATE=$(date +"%d/%m/%Y")
+          echo $GITHUB_REF
+          echo $GITHUB_SHA
+          echo 'This is a test' > foo.txt
+          git add -A
+          git commit -m "$GITHUB_REF $CURRENT_DATE $GITHUB_SHA" --allow-empty
+          git remote -v
+          echo before
+          git push originCF HEAD:Elliot
+          echo finished
