@@ -1,0 +1,106 @@
+[
+  {
+    "type": "files",
+    "description": "Suppression des fichiers inutiles non existant en sandbox/prod",
+    "baseFolder": "force-app",
+    "removeFiles": [
+      "/permissionsets/*",
+      "/objectTranslations/*",
+      "/applications/z*",
+      "/installedPackages/*",
+      "/connectedApps/*",
+      "/objects/ScratchOrgInfo/*",
+      "/objects/ActiveScratchOrg/*",
+      "/navigationMenus/*",
+      "/namedCredentials/*",
+      "/objects/NamespaceRegistry*",
+      "/dashboards*",
+      "/quickActions/Quote*",
+      "/applications/standard*",
+      "/sharingRules/ActiveScratchOrg*",
+      "/sharingRules/ScratchOrgInfo*",
+      "/appMenus/*",
+      "/groups/AllInternal*",
+      "/quickActions/SendEmail*",
+      "/reports/*",
+      "/sites/*",
+      "/reportTypes/*",
+      "/profiles/Identity*",
+      "/translations/*",
+      "/reports/*",
+      "/restrictionRules/*",
+      "/layouts/ContactPoint*",
+      "/quickActions/Case.SendEmail*",
+      "/profiles/Analytics Cloud Integration User.profile-meta.xml",
+      "/profiles/Analytics Cloud Security User.profile-meta.xml",
+      "/profiles/Chatter External User.profile-meta.xml",
+      "/profiles/Chatter Free User.profile-meta.xml",
+      "/profiles/Chatter Moderator User.profile-meta.xml",
+      "/profiles/ContractManager.profile-meta.xml",
+      "/profiles/CustomerPortal Profile.profile-meta.xml",
+      "/profiles/MarketingProfile.profile-meta.xml",
+      "/profiles/Partner Profile.profile-meta.xml",
+      "/profiles/SolutionManager.profile-meta.xml",
+      "/profiles/Standard.profile-meta.xml"
+    ],
+    "include": ["/**"]
+  },
+  {
+    "type": "xml",
+    "description": "Nettoyage des droits non existant en sandbox/prod pour les profils/permissionsets",
+    "baseFolder": "force-app/",
+    "removeElements": [
+      {
+        "primaryTag": "tabVisibilities",
+        "secondTag": "<tab>standard-.*<tab>"
+      },
+      {
+        "primaryTag": "tabVisibilities",
+        "secondTag": "<tab>SDOC__SDoc__c</tab>"
+      },
+      {
+        "primaryTag": "applicationVisibilities"
+      },
+      {
+        "primaryTag": "userPermissions"
+      },
+      {
+        "primaryTag": "layoutAssignments",
+        "secondTag": "<layout>SocialPost-Social Post Layout</layout>"
+      },
+      {
+        "primaryTag": "objectPermissions",
+        "secondTag": "<object>ActiveScratchOrg</object>"
+      },
+      {
+        "primaryTag": "objectPermissions",
+        "secondTag": "<object>ScratchOrgInfo</object>"
+      },
+      {
+        "primaryTag": "objectPermissions",
+        "secondTag": "<object>NamespaceRegistry</object>"
+      }
+    ],
+    "include": ["**/profiles/*"]
+  },
+  {
+    "type": "xml",
+    "description": "Nettoyage des droits non existant en sandbox/prod pour les labels avec id",
+    "baseFolder": "force-app/",
+    "removeElements": [
+      {
+        "primaryTag": "labels",
+        "secondTag": "<value>a0.*"
+      },
+      {
+        "primaryTag": "labels",
+        "secondTag": "<value>01.*"
+      },
+      {
+        "primaryTag": "labels",
+        "secondTag": "<fullName>SDOC_DefaultRunAsUser</fullName>"
+      }
+    ],
+    "include": ["**/labels/*"]
+  }
+]

@@ -9,6 +9,7 @@ on:
       ciSyncName:
         description: "Nom personnalisé du commit de synchro"
         required: false
+        default: "Dump"
 
 jobs:
   dump:
@@ -41,8 +42,8 @@ jobs:
           cidx check:gitignore
           cidx org:auth --alias=org --url=$AUTH_WORK_URL
           cidx org:dump -@ --alias=org --apiVersion=${{ env.CI_API_VERSION }}
-          CI_SYNC_NAME_full=$(${{ github.event.inputs.ciSyncName }}:-$GITHUB_BASE_REF)
+          CI_SYNC_NAME_full="${{ github.event.inputs.ciSyncName }}:${GITHUB_REF##*/}"
           git add -A
           git commit -m "$CI_SYNC_NAME_full $CURRENT_DATE ${GITHUB_SHA:0:7}" --allow-empty
-          git push origin HEAD:$GITHUB_BASE_REF
+          git push origin $GITHUB_REF
           cidx commit:deploy --alias=org --notest=${{ env.CI_UNITTEST_DISABLE}}
