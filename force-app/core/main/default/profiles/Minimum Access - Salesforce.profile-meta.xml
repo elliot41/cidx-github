@@ -71,6 +71,10 @@
         <visible>false</visible>
     </applicationVisibilities>
     <classAccesses>
+        <apexClass>TEST_Ci_Commit</apexClass>
+        <enabled>false</enabled>
+    </classAccesses>
+    <classAccesses>
         <apexClass>TrialCustomerPortalHomePageController</apexClass>
         <enabled>false</enabled>
     </classAccesses>
@@ -367,6 +371,16 @@
     <fieldPermissions>
         <editable>false</editable>
         <field>AuthorizationFormText.SummaryAuthFormText</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>CI_Commit__mdt.hash__c</field>
+        <readable>false</readable>
+    </fieldPermissions>
+    <fieldPermissions>
+        <editable>false</editable>
+        <field>CI_Commit__mdt.tag__c</field>
         <readable>false</readable>
     </fieldPermissions>
     <fieldPermissions>
@@ -2449,6 +2463,9 @@
         <field>Task.WhoId</field>
         <readable>false</readable>
     </fieldPermissions>
+    <layoutAssignments>
+        <layout>CI_Commit__mdt-Présentation CI Commit</layout>
+    </layoutAssignments>
     <layoutAssignments>
         <layout>ContactPointAddress-Présentation Adresse du point de contact</layout>
     </layoutAssignments>
