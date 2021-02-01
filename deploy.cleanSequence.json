@@ -33,11 +33,12 @@
       "/reports/*",
       "/sites/*",
 
-      "standardValueSets/IdeaMultiCategory*",
-      "standardValueSets/IdeaStatus*",
-      "standardValueSets/FiscalYearPeriodName*",
-      "standardValueSets/SocialPostReviewedStatus*",
-      "standardValueSets/OpportunityCompetitor*",
+      "/standardValueSets/IdeaMultiCategory*",
+      "/standardValueSets/IdeaStatus*",
+      "/standardValueSets/FiscalYearPeriodName*",
+      "/standardValueSets/SocialPostReviewedStatus*",
+      "/standardValueSets/OpportunityCompetitor*",
+      "/standardValueSets/OrderType*",
 
       "/reportTypes/*",
       "/profiles/Identity*",
