@@ -69,6 +69,7 @@ jobs:
       - name: Setup
         run: ./scripts/github/before_script.sh
       - name: Run Source Checks
+        continue-on-error: true
         run: |
           npm install pmd-bin --global --loglevel=error
           cidx source:scan -@
