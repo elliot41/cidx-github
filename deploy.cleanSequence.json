@@ -9,8 +9,16 @@
       "/applications/z*",
       "/installedPackages/*",
       "/connectedApps/*",
+      "/cleanDataServices/*",
+      "/emailservices/*",
+
       "/objects/ScratchOrgInfo/*",
       "/objects/ActiveScratchOrg/*",
+      "/objects/CommSubscriptionChannelType/*",
+      "/objects/LocationTrustMeasure/*",
+      "/objects/CommSubscriptionChannelType/*",
+      "/objects/CommSubscriptionChannelType/*",
+
       "/navigationMenus/*",
       "/namedCredentials/*",
       "/objects/NamespaceRegistry*",
@@ -24,6 +32,13 @@
       "/quickActions/SendEmail*",
       "/reports/*",
       "/sites/*",
+
+      "standardValueSets/IdeaMultiCategory*",
+      "standardValueSets/IdeaStatus*",
+      "standardValueSets/FiscalYearPeriodName*",
+      "standardValueSets/SocialPostReviewedStatus*",
+      "standardValueSets/OpportunityCompetitor*",
+
       "/reportTypes/*",
       "/profiles/Identity*",
       "/translations/*",
