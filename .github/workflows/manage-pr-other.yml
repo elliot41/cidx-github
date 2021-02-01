@@ -16,6 +16,7 @@ jobs:
       is_disable_PPR_set: ${{ steps.exec_check_job.outputs.is_disable_PPR_set }}
       is_disable_PROD_set: ${{ steps.exec_check_job.outputs.is_disable_PROD_set }}
     steps:
+      - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ./config/default.env
