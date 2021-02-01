@@ -106,4 +106,4 @@ jobs:
       - name: Deploy to SIT
         run: |
           cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
-          cidx org:deploy --alias=sit --incremental --cleanSequence=deploy.cleanSequence.json --artifact --notest=${{env.CI_UNITTEST_DISABLE}} --checkOnly
+          cidx org:deploy --alias=sit --incremental --cleanSequence=deploy.cleanSequence.json --artifact --notest=${{env.CI_UNITTEST_DISABLE == 'true'}} --checkOnly
