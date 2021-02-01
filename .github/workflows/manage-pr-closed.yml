@@ -2,30 +2,105 @@ name: Manage Closed Pull Requests
 
 on:
   pull_request:
-    types: [ closed ]
+    types: [closed]
 
 jobs:
-  deploy_SIT:
-    # this job will only run if:
-    # - the PR has been merged in the 'develop' branch,
-    # - CI_ENABLE = true,
-    # - DISABLE_SIT = false
-    if: |
-      github.event.pull_request.merged == true &&
-      contains( github.ref, 'develop') &&
-      secrets.CI_ENABLE == 1 &&
-      secrets.DISABLE_SIT != 1
+  set-ci-values:
+    name: set-ci-values
+    runs-on: ubuntu-latest
+    outputs:
+      is_test_lint_set: ${{ steps.exec_check_job.outputs.is_test_lint_set }}
+      is_test_scan_apex_set: ${{ steps.exec_check_job.outputs.is_test_scan_apex_set }}
+      is_disable_SIT_set: ${{ steps.exec_check_job.outputs.is_disable_SIT_set }}
+      is_disable_UAT_set: ${{ steps.exec_check_job.outputs.is_disable_UAT_set }}
+      is_disable_PPR_set: ${{ steps.exec_check_job.outputs.is_disable_PPR_set }}
+      is_disable_PROD_set: ${{ steps.exec_check_job.outputs.is_disable_PROD_set }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ./config/default.env
+      - name: Check which actions should be executed
+        id: exec_check_job
+        run: |
+          echo '::set-output name=is_test_lint_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_LINT == 'false' && env.DISABLE_TEST == 'false' }}'
+          echo '::set-output name=is_test_scan_apex_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_SCAN_TEST == 'false' && env.DISABLE_TEST == 'false' }}'
+          echo '::set-output name=is_disable_SIT_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_SIT == 'true' }}'
+          echo '::set-output name=is_disable_UAT_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_UAT == 'true' }}'
+          echo '::set-output name=is_disable_PPR_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_PPR == 'true' }}'
+          echo '::set-output name=is_disable_PROD_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_PROD == 'true' }}'
+
+  test-lint:
+    name: test-lint
+    needs: [set-ci-values]
+    if: needs.set-ci-values.outputs.is_test_lint_set == 'true'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
-      AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
-      CI_UNITTEST_DISABLE: true
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: actions/setup-node@v2
         with:
-          node-version: '12'
+          node-version: "12"
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+      - name: Lint
+        run: |
+          cidx source:lint
+
+  test-scan-apex:
+    name: test-scan-apex
+    needs: [set-ci-values]
+    if: needs.set-ci-values.outputs.is_test_scan_apex_set == 'true'
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: test-scan-apex
+          path: Artifact/*
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+      - name: Run Source Checks
+        continue-on-error: true
+        run: |
+          npm install pmd-bin --global --loglevel=error
+          cidx source:scan -@
+
+  deploy_SIT:
+    name: deploy_SIT
+    # this job will only run if:
+    # - the PR has been merged in the 'develop' branch,
+    # - CI_ENABLE = true,
+    # - DISABLE_SIT = false
+    if: |
+      github.base_ref == 'develop'  &&
+      needs.set-ci-values.outputs.is_disable_SIT_set == 'false'
+    needs: [test-lint, test-scan-apex, set-ci-values]
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+      AUTH_SIT_URL: ${{ secrets.AUTH_SIT_URL }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ./config/default.env
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: check_SIT
+          path: Artifact/*
       - name: Setup
         run: ./scripts/github/before_script.sh
       - name: Deploy to SIT

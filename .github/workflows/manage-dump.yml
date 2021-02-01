@@ -1,0 +1,49 @@
+name: Dump Org
+
+on:
+  workflow_dispatch:
+    inputs:
+      alias:
+        description: "Target dev org to be dumped"
+        required: true
+      ciSyncName:
+        description: "Nom personnalisé du commit de synchro"
+        required: false
+        default: "Dump"
+
+jobs:
+  dump:
+    # this job will be manually launched by the Release Manager and dump the target org
+    # - the PR has been merged in the 'develop' branch,
+    # - CI_ENABLE = true,
+    # - DISABLE_SIT = false
+    name: dump-org
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+      CI_ENCRYPTION_KEY: ${{ secrets.CI_ENCRYPTION_KEY }}
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ./config/default.env
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+      - name: Dump
+        run: |
+          CURRENT_DATE=$(date +"%d/%m/%Y")
+          FILE_PATH="${{ env.ENV_FOLDER }}${{ github.event.inputs.alias }}.txt"
+          openssl enc -d -aes-256-cbc -in $FILE_PATH.enc -out $FILE_PATH -k ${{ env.CI_ENCRYPTION_KEY }}
+          AUTH_WORK_URL=$(cat $FILE_PATH)
+          cidx check:gitignore
+          cidx org:auth --alias=org --url=$AUTH_WORK_URL
+          cidx org:dump -@ --alias=org --apiVersion=${{ env.CI_API_VERSION }}
+          CI_SYNC_NAME_full="${{ github.event.inputs.ciSyncName }}:${GITHUB_REF##*/}"
+          git add -A
+          git commit -m "$CI_SYNC_NAME_full $CURRENT_DATE ${GITHUB_SHA:0:7}" --allow-empty
+          git push origin $GITHUB_REF
+          cidx commit:deploy --alias=org --notest=${{ env.CI_UNITTEST_DISABLE}}
