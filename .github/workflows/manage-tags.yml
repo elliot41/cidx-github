@@ -51,18 +51,44 @@ jobs:
       needs.set-ci-values.outputs.is_disable_UAT_set == 'false' &&
       needs.set-ci-values.outputs.match-beta == 'true' &&
       needs.set-ci-values.outputs.is_ci_enabled == 'true'
+    env:
+      SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
+      CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
+      AUTH_UAT_URL: ${{ secrets.AUTH_UAT_URL }}
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - uses: c-py/action-dotenv-to-setenv@v2
         with:
           env-file: ./config/default.env
-      - name: Deploys on UAT env
+      - uses: actions/setup-node@v2
+        with:
+          node-version: "12"
+      - uses: actions/upload-artifact@v2
+        with:
+          name: deploy-uat
+          path: Artifact/*
+      - name: Setup
+        run: ./scripts/github/before_script.sh
+      - name: Deploys on UAT
         id: deploy_uat_job
         run: |
-          # git remote update origin --prune
+          git remote update origin --prune
           echo ${{ github.event.ref}}
-          echo ${{ github.ref}}
+          latest_commit="$(git rev-list -n 1 ${{ github.event.ref}})"
+          echo $latest_commit
+          BRANCHES="$(git branch --contains $latest_commit --remote)"
+          IFS=$'\n'
+          for bra in $BRANCHES; do
+            BRANCHE_NAME=$(trim "$bra")
+            echo "branch $BRANCHE_NAME ?"
+            if [ "$BRANCHE_NAME" == "origin/develop" ]; then
+              cidx org:auth --alias=uat --url=${{env.AUTH_UAT_URL}}
+              cidx org:deploy --alias=uat --artifact --deployId
+              exit 0
+            fi
+          done
+          exit 1
 
   deploy-ppr:
     name: deploy-ppr
