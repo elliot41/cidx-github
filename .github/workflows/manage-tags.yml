@@ -11,6 +11,7 @@ jobs:
     if: github.pull_request.merged == 'true'
     runs-on: ubuntu-latest
     outputs:
+      is_ci_enabled: ${{ steps.exec_check_job.outputs.is_ci_enabled }}
       is_test_lint_set: ${{ steps.exec_check_job.outputs.is_test_lint_set }}
       is_test_scan_apex_set: ${{ steps.exec_check_job.outputs.is_test_scan_apex_set }}
       is_disable_SIT_set: ${{ steps.exec_check_job.outputs.is_disable_SIT_set }}
@@ -26,6 +27,7 @@ jobs:
       - name: Check which actions should be executed
         id: exec_check_job
         run: |
+          echo '::set-output name=is_ci_enabled::${{ env.CI_ENABLE == 'true' }}'
           echo '::set-output name=is_test_lint_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_LINT == 'false' && env.DISABLE_TEST == 'false' }}'
           echo '::set-output name=is_test_scan_apex_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_SCAN_TEST == 'false' && env.DISABLE_TEST == 'false' }}'
           echo '::set-output name=is_disable_SIT_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_SIT == 'true' }}'
@@ -51,7 +53,7 @@ jobs:
     if: |
       needs.set-ci-values.outputs.is_disable_UAT_set == 'false' &&
       needs.set-ci-values.outputs.match-beta == 'true' &&
-      env.CI_ENABLE == 'true'
+      needs.set-ci-values.outputs.is_ci_enabled == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
