@@ -1,0 +1,72 @@
+on:
+  push:
+    branches:
+      - "!*"
+    tags:
+      - "*"
+
+jobs:
+  set-ci-values:
+    name: set-ci-values
+    if: github.pull_request.merged == 'true'
+    runs-on: ubuntu-latest
+    outputs:
+      is_test_lint_set: ${{ steps.exec_check_job.outputs.is_test_lint_set }}
+      is_test_scan_apex_set: ${{ steps.exec_check_job.outputs.is_test_scan_apex_set }}
+      is_disable_SIT_set: ${{ steps.exec_check_job.outputs.is_disable_SIT_set }}
+      is_disable_UAT_set: ${{ steps.exec_check_job.outputs.is_disable_UAT_set }}
+      is_disable_PPR_set: ${{ steps.exec_check_job.outputs.is_disable_PPR_set }}
+      match-beta: ${{ steps.exec_check_job.outputs.match-beta }}
+      match-release: ${{ steps.exec_check_job.outputs.match-release }}
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ./config/default.env
+      - name: Check which actions should be executed
+        id: exec_check_job
+        run: |
+          echo '::set-output name=is_test_lint_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_LINT == 'false' && env.DISABLE_TEST == 'false' }}'
+          echo '::set-output name=is_test_scan_apex_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_SCAN_TEST == 'false' && env.DISABLE_TEST == 'false' }}'
+          echo '::set-output name=is_disable_SIT_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_SIT == 'true' }}'
+          echo '::set-output name=is_disable_UAT_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_UAT == 'true' }}'
+          echo '::set-output name=is_disable_PPR_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_PPR == 'true' }}'
+          echo '::set-output name=is_disable_PROD_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_PROD == 'true' }}'
+          echo '::set-output name=match-beta::${{ github.event.ref  =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ }}'
+          echo '::set-output name=match-release::${{ github.event.ref  =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ }}'
+
+  deploy-uat:
+    name: deploy-uat
+    needs: [set-ci-values]
+    if: |
+      needs.set-ci-values.outputs.is_disable_UAT_set == 'false' &&
+      needs.set-ci-values.outputs.match-beta == 'true' &&
+      env.CI_ENABLE == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ./config/default.env
+      - name: Deploys on UAT env
+        id: deploy_uat_job
+        run: |
+          echo "Je suis dans deploy-uat"
+
+  deploy-ppr:
+    name: deploy-ppr
+    needs: [set-ci-values]
+    if: |
+      needs.set-ci-values.outputs.is_disable_UAT_set == 'false' &&
+      needs.set-ci-values.outputs.match-release == 'true' &&
+      env.CI_ENABLE == 'true'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - uses: c-py/action-dotenv-to-setenv@v2
+        with:
+          env-file: ./config/default.env
+      - name: Deploys on PPR env
+        id: deploy_ppr_job
+        run: |
+          echo "Je suis dans deploy-ppr"
