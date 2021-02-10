@@ -46,4 +46,4 @@ jobs:
           git add -A
           git commit -m "$CI_SYNC_NAME_full $CURRENT_DATE ${GITHUB_SHA:0:7}" --allow-empty
           git push origin $GITHUB_REF
-          cidx commit:deploy --alias=org --notest=${{ env.CI_UNITTEST_DISABLE}}
+          cidx commit:deploy --alias=org --notest=${{ env.CI_UNITTEST_DISABLE == 'true'}}
