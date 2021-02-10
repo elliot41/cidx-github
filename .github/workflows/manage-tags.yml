@@ -8,7 +8,6 @@ on:
 jobs:
   set-ci-values:
     name: set-ci-values
-    if: github.pull_request.merged == 'true'
     runs-on: ubuntu-latest
     outputs:
       is_ci_enabled: ${{ steps.exec_check_job.outputs.is_ci_enabled }}
