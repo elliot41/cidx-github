@@ -7,6 +7,7 @@ on:
 jobs:
   set-ci-values:
     name: set-ci-values
+    if: github.pull_request.merged == 'true'
     runs-on: ubuntu-latest
     outputs:
       is_test_lint_set: ${{ steps.exec_check_job.outputs.is_test_lint_set }}
@@ -33,7 +34,9 @@ jobs:
   test-lint:
     name: test-lint
     needs: [set-ci-values]
-    if: needs.set-ci-values.outputs.is_test_lint_set == 'true'
+    if: |
+      needs.set-ci-values.outputs.is_test_lint_set == 'true' &&
+      github.pull_request.merged == 'true'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
@@ -52,7 +55,9 @@ jobs:
   test-scan-apex:
     name: test-scan-apex
     needs: [set-ci-values]
-    if: needs.set-ci-values.outputs.is_test_scan_apex_set == 'true'
+    if: |
+      needs.set-ci-values.outputs.is_test_scan_apex_set == 'true' &&
+      github.pull_request.merged == 'true'
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
       CI_JOB_TOKEN: ${{ secrets.CI_JOB_TOKEN }}
@@ -82,7 +87,8 @@ jobs:
     # - DISABLE_SIT = false
     if: |
       github.base_ref == 'develop'  &&
-      needs.set-ci-values.outputs.is_disable_SIT_set == 'false'
+      needs.set-ci-values.outputs.is_disable_SIT_set == 'false' &&
+      github.pull_request.merged == 'true'
     needs: [test-lint, test-scan-apex, set-ci-values]
     env:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY2 }}
@@ -106,4 +112,4 @@ jobs:
       - name: Deploy to SIT
         run: |
           cidx org:auth --alias=sit --url=${{env.AUTH_SIT_URL}}
-          cidx org:deploy --alias=sit --incremental --cleanSequence=deploy.cleanSequence.json --artifact --notest=${{env.CI_UNITTEST_DISABLE}}
+          cidx org:deploy --alias=sit --incremental --cleanSequence=deploy.cleanSequence.json --artifact --notest=${{env.CI_UNITTEST_DISABLE == 'true'}}
