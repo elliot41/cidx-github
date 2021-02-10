@@ -71,7 +71,7 @@ jobs:
     if: |
       needs.set-ci-values.outputs.is_disable_UAT_set == 'false' &&
       needs.set-ci-values.outputs.match-release == 'true' &&
-      env.CI_ENABLE == 'true'
+      needs.set-ci-values.outputs.is_ci_enabled == 'true'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
