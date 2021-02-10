@@ -32,8 +32,18 @@ jobs:
           echo '::set-output name=is_disable_UAT_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_UAT == 'true' }}'
           echo '::set-output name=is_disable_PPR_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_PPR == 'true' }}'
           echo '::set-output name=is_disable_PROD_set::${{ env.CI_ENABLE == 'true' && env.DISABLE_PROD == 'true' }}'
-          echo '::set-output name=match-beta::${{ github.event.ref  =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ }}'
-          echo '::set-output name=match-release::${{ github.event.ref  =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ }}'
+          if [[ ${{ github.event.ref }} =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+-beta\.[0-9]+$ ]]
+          then
+            echo ::set-output name=match-beta::true
+          else
+            echo ::set-output name=match-beta::false
+          fi
+          if [[ ${{ github.event.ref }} =~ ^refs/tags/[0-9]+\.[0-9]+\.[0-9]+$ ]]
+          then
+            echo ::set-output name=match-release::true
+          else
+            echo ::set-output name=match-release::false
+          fi
 
   deploy-uat:
     name: deploy-uat
