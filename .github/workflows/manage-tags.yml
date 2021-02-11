@@ -85,7 +85,7 @@ jobs:
             echo "branch $BRANCHE_NAME ?"
             if [ "$BRANCHE_NAME" == "origin/develop" ]; then
               cidx org:auth --alias=uat --url=${{env.AUTH_UAT_URL}}
-              cidx org:deploy --alias=uat --cleanSequence=deploy.cleanSequence.json --incremental --tag=${TAG_REF##*/} --artifact --notest=${{env.CI_UNITTEST_DISABLE == 'true'}}
+              cidx org:deploy --alias=uat --cleanSequence=deploy.cleanSequence.json --incremental --tag=${$TAG_REF##*/} --artifact --notest=${{env.CI_UNITTEST_DISABLE == 'true'}}
               exit 0
             fi
           done
