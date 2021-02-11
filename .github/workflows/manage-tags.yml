@@ -80,7 +80,7 @@ jobs:
           BRANCHES="$(git branch --contains $latest_commit --remote)"
           IFS=$'\n'
           for bra in $BRANCHES; do
-            BRANCHE_NAME="echo $bra | sed -r 's/( )+//g'"
+            BRANCHE_NAME=$(echo $bra | sed -r 's/( )+//g')
             echo "branch $BRANCHE_NAME ?"
             if [ "$BRANCHE_NAME" == "origin/develop" ]; then
               cidx org:auth --alias=uat --url=${{env.AUTH_UAT_URL}}
