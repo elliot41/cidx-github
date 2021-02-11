@@ -75,7 +75,7 @@ jobs:
         run: |
           git remote update origin --prune
           TAG_REF = "${{ github.event.ref}}"
-          echo $TAG_REF
+          echo "$TAG_REF"
           latest_commit="$(git rev-list -n 1 ${{ github.event.ref}})"
           echo $latest_commit
           BRANCHES="$(git branch --contains $latest_commit --remote)"
