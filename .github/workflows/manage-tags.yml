@@ -74,8 +74,7 @@ jobs:
         id: deploy_uat_job
         run: |
           git remote update origin --prune
-          TAG_REF = "${{ github.event.ref}}"
-          echo "$TAG_REF"
+          echo "${{ github.event.ref}}"
           latest_commit="$(git rev-list -n 1 ${{ github.event.ref}})"
           echo $latest_commit
           BRANCHES="$(git branch --contains $latest_commit --remote)"
@@ -85,7 +84,7 @@ jobs:
             echo "branch $BRANCHE_NAME ?"
             if [ "$BRANCHE_NAME" == "origin/develop" ]; then
               cidx org:auth --alias=uat --url=${{env.AUTH_UAT_URL}}
-              cidx org:deploy --alias=uat --cleanSequence=deploy.cleanSequence.json --incremental --tag=${$TAG_REF##*/} --artifact --notest=${{env.CI_UNITTEST_DISABLE == 'true'}}
+              cidx org:deploy --alias=uat --cleanSequence=deploy.cleanSequence.json --incremental --tag=${${{ github.event.ref}}##*/} --artifact --notest=${{env.CI_UNITTEST_DISABLE == 'true'}}
               exit 0
             fi
           done
